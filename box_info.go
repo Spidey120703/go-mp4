@@ -29,6 +29,15 @@ type Context struct {
 
 	// UnderUdta represents whether current box is under the udta box.
 	UnderUdta bool
+
+	// UnderStsd represents whether current box is under the stsd box.
+	UnderStsd bool
+
+	// IsProtected indicates whether the current sample entry is protected.
+	IsProtected bool
+
+	// PerSampleIVSize is the Default_Per_Sample_IV_Size value parsed from the tenc box.
+	PerSampleIVSize uint8
 }
 
 // BoxInfo has common infomations of box

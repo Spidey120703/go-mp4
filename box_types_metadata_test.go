@@ -86,7 +86,7 @@ func TestBoxTypesMetadata(t *testing.T) {
 			ctx: Context{UnderIlstMeta: true},
 		},
 		{
-			name: "ilst data (mac string)",
+			name: "ilst data (shift-jis string)",
 			src:  &Data{DataType: 3, DataLang: 0x12345678, Data: []byte("foo")},
 			dst:  &Data{},
 			bin: []byte{
@@ -94,7 +94,7 @@ func TestBoxTypesMetadata(t *testing.T) {
 				0x12, 0x34, 0x56, 0x78, // data lang
 				0x66, 0x6f, 0x6f, // data
 			},
-			str: `DataType=MAC_STR DataLang=305419896 Data=[0x66, 0x6f, 0x6f]`,
+			str: `DataType=SJIS DataLang=305419896 Data=[0x66, 0x6f, 0x6f]`,
 			ctx: Context{UnderIlstMeta: true},
 		},
 		{
@@ -102,7 +102,7 @@ func TestBoxTypesMetadata(t *testing.T) {
 			src:  &Data{DataType: 14, DataLang: 0x12345678, Data: []byte("foo")},
 			dst:  &Data{},
 			bin: []byte{
-				0x00, 0x00, 0x00, 0x0e, // data type
+				0x00, 0x00, 0x00, 0x0d, // data type
 				0x12, 0x34, 0x56, 0x78, // data lang
 				0x66, 0x6f, 0x6f, // data
 			},
