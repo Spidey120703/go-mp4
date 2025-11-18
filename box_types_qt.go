@@ -2,6 +2,42 @@ package mp4
 
 import "fmt"
 
+/*************************** alac ****************************/
+
+func BoxTypeAlac() BoxType {
+	return StrToBoxType("alac")
+}
+
+func init() {
+	AddBoxDef((*Alac)(nil))
+	AddAnyTypeBoxDefEx(&AudioSampleEntry{}, BoxTypeAlac(), func(context Context) bool {
+		return context.UnderStsd
+	})
+}
+
+// Alac is ALACSpecificConfig entry
+// https://github.com/macosforge/alac/blob/master/codec/ALACAudioTypes.h#L162
+type Alac struct {
+	FullBox `mp4:"0,extend"`
+
+	FrameLength       uint32 `mp4:"1,size=32"`
+	CompatibleVersion uint8  `mp4:"2,size=8"`
+	BitDepth          uint8  `mp4:"3,size=8"`
+	Pb                uint8  `mp4:"4,size=8"`
+	Mb                uint8  `mp4:"5,size=8"`
+	Kb                uint8  `mp4:"6,size=8"`
+	NumChannels       uint8  `mp4:"7,size=8"`
+	MaxRun            uint16 `mp4:"8,size=16"`
+	MaxFrameByte      uint32 `mp4:"9,size=32"`
+	AvgBitRate        uint32 `mp4:"10,size=32"`
+	SampleRate        uint32 `mp4:"11,size=32"`
+}
+
+// GetType returns the BoxType
+func (*Alac) GetType() BoxType {
+	return BoxTypeAlac()
+}
+
 /*************************** ludt ****************************/
 
 func BoxTypeLudt() BoxType {
@@ -86,11 +122,12 @@ func init() {
 	AddBoxDef(&Swre{})
 }
 
+// Swre is thef name and version number of the software that generated this movie
 type Swre struct {
 	FullBox `mp4:"0,extend"`
 	// TODO: Meaning of these two bytes is still unknown.
 	Unknown [2]byte `mp4:"1,size=8"`
-	String  string  `mp4:"2"`
+	Version string  `mp4:"2"`
 }
 
 // GetType returns the BoxType
