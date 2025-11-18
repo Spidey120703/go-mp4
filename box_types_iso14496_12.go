@@ -2488,3 +2488,25 @@ type Wave struct {
 func (*Wave) GetType() BoxType {
 	return BoxTypeWave()
 }
+
+/*************************** chrm ****************************/
+
+func BoxTypeChrm() BoxType {
+	return StrToBoxType("chrm")
+}
+
+func init() {
+	AddBoxDef((*Chrm)(nil))
+}
+
+// Chrm is QuickTime chrm box
+type Chrm struct {
+	Box
+	X uint8 `mp4:"0,size=8"`
+	Y uint8 `mp4:"1,size=8"`
+}
+
+// GetType returns the BoxType
+func (*Chrm) GetType() BoxType {
+	return BoxTypeChrm()
+}
