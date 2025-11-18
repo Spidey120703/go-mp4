@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/abema/go-mp4"
+	"github.com/Spidey120703/go-mp4"
 	"github.com/sunfish-shogi/bufseekio"
 )
 

@@ -6,8 +6,8 @@ import (
 	"io"
 	"strings"
 
-	"github.com/abema/go-mp4/internal/bitio"
-	"github.com/abema/go-mp4/internal/util"
+	"github.com/Spidey120703/go-mp4/internal/bitio"
+	"github.com/Spidey120703/go-mp4/internal/util"
 )
 
 /*************************** btrt ****************************/

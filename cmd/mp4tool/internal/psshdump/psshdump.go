@@ -6,7 +6,7 @@ import (
 	"io"
 	"os"
 
-	mp4 "github.com/abema/go-mp4"
+	mp4 "github.com/Spidey120703/go-mp4"
 	"github.com/sunfish-shogi/bufseekio"
 )
 

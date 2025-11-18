@@ -5,7 +5,7 @@ import (
 	"io"
 	"math"
 
-	"github.com/abema/go-mp4/internal/bitio"
+	"github.com/Spidey120703/go-mp4/internal/bitio"
 )
 
 const LengthUnlimited = math.MaxUint32

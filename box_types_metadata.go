@@ -3,7 +3,7 @@ package mp4
 import (
 	"fmt"
 
-	"github.com/abema/go-mp4/internal/util"
+	"github.com/Spidey120703/go-mp4/internal/util"
 )
 
 /*************************** ilst ****************************/
@@ -13,10 +13,22 @@ func BoxTypeData() BoxType { return StrToBoxType("data") }
 
 var ilstMetaBoxTypes = []BoxType{
 	StrToBoxType("----"),
+	StrToBoxType("@PST"),
+	StrToBoxType("@ppi"),
+	StrToBoxType("@pti"),
+	StrToBoxType("@sti"),
+	StrToBoxType("AACR"),
+	StrToBoxType("CDEK"),
+	StrToBoxType("CDET"),
+	StrToBoxType("GUID"),
+	StrToBoxType("VERS"),
 	StrToBoxType("aART"),
 	StrToBoxType("akID"),
+	StrToBoxType("albm"),
 	StrToBoxType("apID"),
 	StrToBoxType("atID"),
+	StrToBoxType("auth"),
+	StrToBoxType("catg"),
 	StrToBoxType("cmID"),
 	StrToBoxType("cnID"),
 	StrToBoxType("covr"),
@@ -24,16 +36,36 @@ var ilstMetaBoxTypes = []BoxType{
 	StrToBoxType("cprt"),
 	StrToBoxType("desc"),
 	StrToBoxType("disk"),
+	StrToBoxType("dscp"),
 	StrToBoxType("egid"),
 	StrToBoxType("geID"),
 	StrToBoxType("gnre"),
+	StrToBoxType("grup"),
+	StrToBoxType("gshh"),
+	StrToBoxType("gspm"),
+	StrToBoxType("gspu"),
+	StrToBoxType("gssd"),
+	StrToBoxType("gsst"),
+	StrToBoxType("gstd"),
+	StrToBoxType("hdvd"),
+	StrToBoxType("itnu"),
+	StrToBoxType("keyw"),
+	StrToBoxType("ldes"),
+	StrToBoxType("ownr"),
 	StrToBoxType("pcst"),
+	StrToBoxType("perf"),
 	StrToBoxType("pgap"),
 	StrToBoxType("plID"),
+	StrToBoxType("prID"),
 	StrToBoxType("purd"),
 	StrToBoxType("purl"),
+	StrToBoxType("rate"),
+	StrToBoxType("rldt"),
 	StrToBoxType("rtng"),
+	StrToBoxType("sdes"),
 	StrToBoxType("sfID"),
+	StrToBoxType("shwm"),
+	StrToBoxType("snal"),
 	StrToBoxType("soaa"),
 	StrToBoxType("soal"),
 	StrToBoxType("soar"),
@@ -41,23 +73,51 @@ var ilstMetaBoxTypes = []BoxType{
 	StrToBoxType("sonm"),
 	StrToBoxType("sosn"),
 	StrToBoxType("stik"),
+	StrToBoxType("titl"),
 	StrToBoxType("tmpo"),
+	StrToBoxType("tnal"),
 	StrToBoxType("trkn"),
 	StrToBoxType("tven"),
 	StrToBoxType("tves"),
 	StrToBoxType("tvnn"),
 	StrToBoxType("tvsh"),
 	StrToBoxType("tvsn"),
+	StrToBoxType("xid "),
+	StrToBoxType("yrrc"),
+	StrToBoxType("data"),
 	{0xA9, 'A', 'R', 'T'},
 	{0xA9, 'a', 'l', 'b'},
+	{0xA9, 'a', 'r', 'd'},
+	{0xA9, 'a', 'r', 'g'},
+	{0xA9, 'a', 'u', 't'},
 	{0xA9, 'c', 'm', 't'},
 	{0xA9, 'c', 'o', 'm'},
+	{0xA9, 'c', 'o', 'n'},
+	{0xA9, 'c', 'p', 'y'},
 	{0xA9, 'd', 'a', 'y'},
+	{0xA9, 'd', 'e', 's'},
+	{0xA9, 'd', 'i', 'r'},
+	{0xA9, 'e', 'n', 'c'},
 	{0xA9, 'g', 'e', 'n'},
 	{0xA9, 'g', 'r', 'p'},
+	{0xA9, 'l', 'y', 'r'},
+	{0xA9, 'm', 'v', 'c'},
+	{0xA9, 'm', 'v', 'i'},
+	{0xA9, 'm', 'v', 'n'},
 	{0xA9, 'n', 'a', 'm'},
+	{0xA9, 'n', 'r', 't'},
+	{0xA9, 'o', 'p', 'e'},
+	{0xA9, 'p', 'r', 'd'},
+	{0xA9, 'p', 'u', 'b'},
+	{0xA9, 's', 'n', 'e'},
+	{0xA9, 's', 'o', 'l'},
+	{0xA9, 's', 't', '3'},
 	{0xA9, 't', 'o', 'o'},
+	{0xA9, 't', 'r', 'k'},
+	{0xA9, 'w', 'r', 'k'},
 	{0xA9, 'w', 'r', 't'},
+	{0xA9, 'x', 'p', 'd'},
+	{0xA9, 'x', 'y', 'z'},
 }
 
 func IsIlstMetaBoxType(boxType BoxType) bool {
@@ -97,14 +157,32 @@ func isIlstMetaContainer(ctx Context) bool {
 }
 
 const (
-	DataTypeBinary             = 0
-	DataTypeStringUTF8         = 1
-	DataTypeStringUTF16        = 2
-	DataTypeStringMac          = 3
-	DataTypeStringJPEG         = 14
-	DataTypeSignedIntBigEndian = 21
-	DataTypeFloat32BigEndian   = 22
-	DataTypeFloat64BigEndian   = 23
+	DatatypeReserved           = 0
+	DataTypeUTF8               = 1
+	DataTypeUTF16              = 2
+	DataTypeSJIS               = 3
+	DataTypeUTF8Sort           = 4
+	DataTypeUTF16Sort          = 5
+	DataTypeJPEG               = 13
+	DataTypePNG                = 14
+	DataTypeInt                = 21
+	DataTypeUint               = 22
+	DataTypeFloat32            = 23
+	DataTypeFloat64            = 24
+	DataTypeBMP                = 27
+	DataTypeQTMetadataAtom     = 28
+	DataTypeInt8               = 65
+	DataTypeInt16              = 66
+	DataTypeInt32              = 67
+	DataTypePointF32           = 70
+	DataTypeDimensionsF32      = 71
+	DataTypeRectF32            = 72
+	DataTypeInt64              = 74
+	DataTypeUint8              = 75
+	DataTypeUint16             = 76
+	DataTypeUint32             = 77
+	DataTypeUint64             = 78
+	DataTypeAffineTransformF64 = 79
 )
 
 // Data is a Value BoxType
@@ -130,26 +208,48 @@ func (data *Data) StringifyField(name string, indent string, depth int, ctx Cont
 	switch name {
 	case "DataType":
 		switch data.DataType {
-		case DataTypeBinary:
+		case DatatypeReserved:
 			return "BINARY", true
-		case DataTypeStringUTF8:
+		case DataTypeUTF8, DataTypeUTF8Sort:
 			return "UTF8", true
-		case DataTypeStringUTF16:
+		case DataTypeUTF16, DataTypeUTF16Sort:
 			return "UTF16", true
-		case DataTypeStringMac:
-			return "MAC_STR", true
-		case DataTypeStringJPEG:
+		case DataTypeSJIS:
+			return "SJIS", true
+		case DataTypeJPEG:
 			return "JPEG", true
-		case DataTypeSignedIntBigEndian:
+		case DataTypePNG:
+			return "PNG", true
+		case DataTypeBMP:
+			return "BMP", true
+		case DataTypeInt:
 			return "INT", true
-		case DataTypeFloat32BigEndian:
+		case DataTypeUint:
+			return "UINT", true
+		case DataTypeInt8:
+			return "INT8", true
+		case DataTypeUint8:
+			return "UINT8", true
+		case DataTypeInt16:
+			return "INT16", true
+		case DataTypeUint16:
+			return "UINT16", true
+		case DataTypeInt32:
+			return "INT32", true
+		case DataTypeUint32:
+			return "UINT32", true
+		case DataTypeInt64:
+			return "INT64", true
+		case DataTypeUint64:
+			return "UINT64", true
+		case DataTypeFloat32:
 			return "FLOAT32", true
-		case DataTypeFloat64BigEndian:
+		case DataTypeFloat64:
 			return "FLOAT64", true
 		}
 	case "Data":
 		switch data.DataType {
-		case DataTypeStringUTF8:
+		case DataTypeUTF8:
 			return fmt.Sprintf("\"%s\"", util.EscapeUnprintables(string(data.Data))), true
 		}
 	}

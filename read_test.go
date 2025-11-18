@@ -59,7 +59,7 @@ func TestReadBoxStructure(t *testing.T) {
 			box, n, err := h.ReadPayload()
 			require.NoError(t, err)
 			require.Equal(t, uint64(21), n)
-			assert.Equal(t, &Data{DataType: DataTypeStringUTF8, DataLang: 0, Data: []byte("Lavf58.29.100")}, box)
+			assert.Equal(t, &Data{DataType: DataTypeUTF8, DataLang: 0, Data: []byte("Lavf58.29.100")}, box)
 			_, err = h.Expand()
 			require.NoError(t, err)
 			return "stco", nil

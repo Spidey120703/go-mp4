@@ -7,6 +7,60 @@ import (
 	"github.com/google/uuid"
 )
 
+/*************************** senc ****************************/
+
+func BoxTypeSenc() BoxType {
+	return StrToBoxType("senc")
+}
+
+func init() {
+	AddBoxDef(&Senc{})
+}
+
+type SubsampleEntry struct {
+	BytesOfClearData     uint16 `mp4:"0,size=16"`
+	BytesOfProtectedData uint32 `mp4:"1,size=32"`
+}
+
+type SencSampleEntry struct {
+	BaseCustomFieldObject
+	InitializationVector []uint8          `mp4:"0,size=8,len=dynamic"`
+	SubsampleCount       uint16           `mp4:"1,size=16,opt=2"`
+	SubsampleEntries     []SubsampleEntry `mp4:"2,len=dynamic,size=48,opt=2"`
+}
+
+// GetFieldLength returns length of dynamic field
+func (s *SencSampleEntry) GetFieldLength(name string, ctx Context) uint {
+	switch name {
+	case "InitializationVector":
+		return uint(ctx.PerSampleIVSize * 8)
+	case "SubsampleEntries":
+		return uint(s.SubsampleCount)
+	}
+	panic(fmt.Errorf("invalid name of dynamic-length field: boxType=senc fieldName=%s", name))
+}
+
+// Senc is ISOBMFF senc box type
+type Senc struct {
+	FullBox       `mp4:"0,extend"`
+	SampleCount   uint32            `mp4:"1,size=32"`
+	SampleEntries []SencSampleEntry `mp4:"2,len=dynamic"`
+}
+
+// GetFieldLength returns length of dynamic field
+func (s *Senc) GetFieldLength(name string, ctx Context) uint {
+	switch name {
+	case "SampleEntries":
+		return uint(s.SampleCount)
+	}
+	panic(fmt.Errorf("invalid name of dynamic-length field: boxType=senc fieldName=%s", name))
+}
+
+// GetType returns the BoxType
+func (*Senc) GetType() BoxType {
+	return BoxTypeSenc()
+}
+
 /*************************** pssh ****************************/
 
 func BoxTypePssh() BoxType { return StrToBoxType("pssh") }
