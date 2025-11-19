@@ -88,6 +88,8 @@ func readBoxStructureFromInternal(r io.ReadSeeker, bi *BoxInfo, path BoxPath, ha
 		}
 	} else if bi.Type == BoxTypeUdta() {
 		ctx.UnderUdta = true
+	} else if bi.Type == BoxTypeStsd() {
+		ctx.UnderStsd = true
 	} else if bi.Type == BoxTypeTenc() {
 		// InitializationVector Configuration from ISO/IEC 25001-7
 		var tenc Tenc
