@@ -2499,7 +2499,7 @@ func init() {
 	AddBoxDef((*Chrm)(nil))
 }
 
-// Chrm is QuickTime chrm box
+// Chrm is AVC chrm box
 type Chrm struct {
 	Box
 	X uint8 `mp4:"0,size=8"`
