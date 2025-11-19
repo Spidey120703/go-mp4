@@ -540,6 +540,8 @@ func init() {
 }
 
 func BrandQT() [4]byte   { return [4]byte{'q', 't', ' ', ' '} }
+func BrandM4A() [4]byte  { return [4]byte{'M', '4', 'A', ' '} }
+func BrandM4V() [4]byte  { return [4]byte{'M', '4', 'V', ' '} }
 func BrandISOM() [4]byte { return [4]byte{'i', 's', 'o', 'm'} }
 func BrandISO2() [4]byte { return [4]byte{'i', 's', 'o', '2'} }
 func BrandISO3() [4]byte { return [4]byte{'i', 's', 'o', '3'} }
@@ -551,6 +553,7 @@ func BrandISO8() [4]byte { return [4]byte{'i', 's', 'o', '8'} }
 func BrandISO9() [4]byte { return [4]byte{'i', 's', 'o', '9'} }
 func BrandAVC1() [4]byte { return [4]byte{'a', 'v', 'c', '1'} }
 func BrandMP41() [4]byte { return [4]byte{'m', 'p', '4', '1'} }
+func BrandMP42() [4]byte { return [4]byte{'m', 'p', '4', '2'} }
 func BrandMP71() [4]byte { return [4]byte{'m', 'p', '7', '1'} }
 
 // Ftyp is ISOBMFF ftyp box type
