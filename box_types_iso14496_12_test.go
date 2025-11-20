@@ -2215,6 +2215,29 @@ func TestBoxTypesISO14496_12(t *testing.T) {
 			str: `Version=0 Flags=0x000000 SampleSize=0 SampleCount=2 EntrySize=[19088743, 591751049]`,
 		},
 		{
+			name: "stz2: sample size array",
+			src: &Stz2{
+				FullBox: FullBox{
+					Version: 0,
+					Flags:   [3]byte{0x00, 0x00, 0x00},
+				},
+				FieldSize:   32,
+				SampleCount: 2,
+				EntrySize:   []uint32{0x01234567, 0x23456789},
+			},
+			dst: &Stz2{},
+			bin: []byte{
+				0,                // version
+				0x00, 0x00, 0x00, // flags
+				0x00, 0x00, 0x00, // reversed
+				0x20,                   // field size
+				0x00, 0x00, 0x00, 0x02, // sample count
+				0x01, 0x23, 0x45, 0x67, // entry size
+				0x23, 0x45, 0x67, 0x89, // entry size
+			},
+			str: `Version=0 Flags=0x000000 FieldSize=0x20 SampleCount=2 EntrySize=[19088743, 591751049]`,
+		},
+		{
 			name: "stts",
 			src: &Stts{
 				FullBox: FullBox{

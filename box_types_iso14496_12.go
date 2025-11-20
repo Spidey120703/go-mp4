@@ -1963,6 +1963,46 @@ func (stsz *Stsz) GetFieldLength(name string, ctx Context) uint {
 	panic(fmt.Errorf("invalid name of dynamic-length field: boxType=stsz fieldName=%s", name))
 }
 
+/*************************** stz2 ****************************/
+
+func BoxTypeStz2() BoxType { return StrToBoxType("stz2") }
+
+func init() {
+	AddBoxDef(&Stz2{}, 0)
+}
+
+// Stz2 is ISOBMFF stz2 box type
+type Stz2 struct {
+	FullBox     `mp4:"0,extend"`
+	Reserved    uint32   `mp4:"1,size=24,const=0"`
+	FieldSize   uint8    `mp4:"2,size=8"`
+	SampleCount uint32   `mp4:"3,size=32"`
+	EntrySize   []uint32 `mp4:"4,size=dynamic,len=dynamic"`
+}
+
+// GetType returns the BoxType
+func (*Stz2) GetType() BoxType {
+	return BoxTypeStz2()
+}
+
+// GetFieldLength returns length of dynamic field
+func (stz2 *Stz2) GetFieldLength(name string, ctx Context) uint {
+	switch name {
+	case "EntrySize":
+		return uint(stz2.SampleCount)
+	}
+	panic(fmt.Errorf("invalid name of dynamic-length field: boxType=stz2 fieldName=%s", name))
+}
+
+// GetFieldSize returns size of dynamic field
+func (stz2 *Stz2) GetFieldSize(name string, ctx Context) uint {
+	switch name {
+	case "EntrySize":
+		return uint(stz2.FieldSize)
+	}
+	panic(fmt.Errorf("invalid name of dynamic-size field: boxType=stz2 fieldName=%s", name))
+}
+
 /*************************** stts ****************************/
 
 func BoxTypeStts() BoxType { return StrToBoxType("stts") }
