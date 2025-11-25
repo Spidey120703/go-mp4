@@ -33,7 +33,9 @@ type SencSampleEntry struct {
 func (s *SencSampleEntry) GetFieldLength(name string, ctx Context) uint {
 	switch name {
 	case "InitializationVector":
-		return uint(ctx.PerSampleIVSize * 8)
+		// TODO: unable to get DefaultPerSampleIVSize from specific tenc box
+		var PerSampleIVSize uint8
+		return uint(PerSampleIVSize * 8)
 	case "SubsampleEntries":
 		return uint(s.SubsampleCount)
 	}

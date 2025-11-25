@@ -93,17 +93,6 @@ func readBoxStructureFromInternal(r io.ReadSeeker, bi *BoxInfo, path BoxPath, ha
 	} else if ctx.UnderStsd {
 		// handle box type collision between stsd sample entry and its nested boxes
 		ctx.UnderStsd = false
-	} else if bi.Type == BoxTypeTenc() {
-		// InitializationVector Configuration from ISO/IEC 25001-7
-		var tenc Tenc
-		if _, err := Unmarshal(r, bi.Size-bi.HeaderSize, &tenc, bi.Context); err != nil {
-			return nil, err
-		}
-		ctx.IsProtected = tenc.DefaultIsProtected != 0
-		ctx.PerSampleIVSize = tenc.DefaultPerSampleIVSize
-		if _, err := bi.SeekToPayload(r); err != nil {
-			return nil, err
-		}
 	}
 
 	newPath := make(BoxPath, len(path)+1)
