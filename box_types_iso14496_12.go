@@ -669,6 +669,29 @@ func (hdlr *Hdlr) OnReadName(r bitio.ReadSeeker, leftBits uint64, ctx Context) (
 	return leftBits, true, nil
 }
 
+/*************************** hmhd ****************************/
+
+func BoxTypeHmhd() BoxType { return StrToBoxType("hmhd") }
+
+func init() {
+	AddBoxDef(&Hmhd{}, 0)
+}
+
+// Hmhd is ISOBMFF hmhd box type
+type Hmhd struct {
+	FullBox    `mp4:"0,extend"`
+	MaxPDUSize uint16 `mp4:"1,size=16"`
+	AvgPDUSize uint16 `mp4:"1,size=16"`
+	MaxBitrate uint32 `mp4:"1,size=32"`
+	AvgBitrate uint32 `mp4:"1,size=32"`
+	Reserved   uint16 `mp4:"2,size=32,const=0"`
+}
+
+// GetType returns the BoxType
+func (*Hmhd) GetType() BoxType {
+	return BoxTypeHmhd()
+}
+
 /*************************** hvcC ****************************/
 
 func BoxTypeHvcC() BoxType { return StrToBoxType("hvcC") }
@@ -1126,6 +1149,24 @@ func (mvhd *Mvhd) GetRateInt() int16 {
 	return int16(mvhd.Rate >> 16)
 }
 
+/*************************** nmhd ****************************/
+
+func BoxTypeNmhd() BoxType { return StrToBoxType("nmhd") }
+
+func init() {
+	AddBoxDef(&Nmhd{}, 0)
+}
+
+// Nmhd is ISOBMFF nmhd box type
+type Nmhd struct {
+	FullBox `mp4:"0,extend"`
+}
+
+// GetType returns the BoxType
+func (*Nmhd) GetType() BoxType {
+	return BoxTypeNmhd()
+}
+
 /*************************** saio ****************************/
 
 func BoxTypeSaio() BoxType { return StrToBoxType("saio") }
@@ -1448,6 +1489,15 @@ type TextSubtitleSampleEntry struct {
 	SampleEntry     `mp4:"0,extend"`
 	ContentEncoding string `mp4:"1,string"` // optional
 	MIMEFormat      string `mp4:"2,string"`
+}
+
+type HintSampleEntry struct {
+	SampleEntry `mp4:"0,extend"`
+	Data        []uint8 `mp4:"1,size=8"`
+}
+
+type PlainTextSampleEntry struct {
+	SampleEntry `mp4:"0,extend"`
 }
 
 /*************************** sbgp ****************************/
@@ -1848,6 +1898,24 @@ func (stco *Stco) GetFieldLength(name string, ctx Context) uint {
 	panic(fmt.Errorf("invalid name of dynamic-length field: boxType=stco fieldName=%s", name))
 }
 
+/*************************** sthd ****************************/
+
+func BoxTypeSthd() BoxType { return StrToBoxType("sthd") }
+
+func init() {
+	AddBoxDef(&Sthd{}, 0)
+}
+
+// Sthd is ISOBMFF sthd box type
+type Sthd struct {
+	FullBox `mp4:"0,extend"`
+}
+
+// GetType returns the BoxType
+func (*Sthd) GetType() BoxType {
+	return BoxTypeSthd()
+}
+
 /*************************** stsc ****************************/
 
 func BoxTypeStsc() BoxType { return StrToBoxType("stsc") }
@@ -1963,46 +2031,6 @@ func (stsz *Stsz) GetFieldLength(name string, ctx Context) uint {
 	panic(fmt.Errorf("invalid name of dynamic-length field: boxType=stsz fieldName=%s", name))
 }
 
-/*************************** stz2 ****************************/
-
-func BoxTypeStz2() BoxType { return StrToBoxType("stz2") }
-
-func init() {
-	AddBoxDef(&Stz2{}, 0)
-}
-
-// Stz2 is ISOBMFF stz2 box type
-type Stz2 struct {
-	FullBox     `mp4:"0,extend"`
-	Reserved    uint32   `mp4:"1,size=24,const=0"`
-	FieldSize   uint8    `mp4:"2,size=8"`
-	SampleCount uint32   `mp4:"3,size=32"`
-	EntrySize   []uint32 `mp4:"4,size=dynamic,len=dynamic"`
-}
-
-// GetType returns the BoxType
-func (*Stz2) GetType() BoxType {
-	return BoxTypeStz2()
-}
-
-// GetFieldLength returns length of dynamic field
-func (stz2 *Stz2) GetFieldLength(name string, ctx Context) uint {
-	switch name {
-	case "EntrySize":
-		return uint(stz2.SampleCount)
-	}
-	panic(fmt.Errorf("invalid name of dynamic-length field: boxType=stz2 fieldName=%s", name))
-}
-
-// GetFieldSize returns size of dynamic field
-func (stz2 *Stz2) GetFieldSize(name string, ctx Context) uint {
-	switch name {
-	case "EntrySize":
-		return uint(stz2.FieldSize)
-	}
-	panic(fmt.Errorf("invalid name of dynamic-size field: boxType=stz2 fieldName=%s", name))
-}
-
 /*************************** stts ****************************/
 
 func BoxTypeStts() BoxType { return StrToBoxType("stts") }
@@ -2054,6 +2082,100 @@ type Styp struct {
 
 func (*Styp) GetType() BoxType {
 	return BoxTypeStyp()
+}
+
+/*************************** stz2 ****************************/
+
+func BoxTypeStz2() BoxType { return StrToBoxType("stz2") }
+
+func init() {
+	AddBoxDef(&Stz2{}, 0)
+}
+
+// Stz2 is ISOBMFF stz2 box type
+type Stz2 struct {
+	FullBox     `mp4:"0,extend"`
+	Reserved    uint32   `mp4:"1,size=24,const=0"`
+	FieldSize   uint8    `mp4:"2,size=8"`
+	SampleCount uint32   `mp4:"3,size=32"`
+	EntrySize   []uint32 `mp4:"4,size=dynamic,len=dynamic"`
+}
+
+// GetType returns the BoxType
+func (*Stz2) GetType() BoxType {
+	return BoxTypeStz2()
+}
+
+// GetFieldLength returns length of dynamic field
+func (stz2 *Stz2) GetFieldLength(name string, ctx Context) uint {
+	switch name {
+	case "EntrySize":
+		return uint(stz2.SampleCount)
+	}
+	panic(fmt.Errorf("invalid name of dynamic-length field: boxType=stz2 fieldName=%s", name))
+}
+
+// GetFieldSize returns size of dynamic field
+func (stz2 *Stz2) GetFieldSize(name string, ctx Context) uint {
+	switch name {
+	case "EntrySize":
+		return uint(stz2.FieldSize)
+	}
+	panic(fmt.Errorf("invalid name of dynamic-size field: boxType=stz2 fieldName=%s", name))
+}
+
+/*************************** subs ****************************/
+
+func BoxTypeSubs() BoxType { return StrToBoxType("subs") }
+
+func init() {
+	AddBoxDef(&Subs{}, 0)
+}
+
+// Subs is ISOBMFF subs box type
+type Subs struct {
+	FullBox    `mp4:"0,extend"`
+	EntryCount uint32                      `mp4:"1,size=32"`
+	Entries    []SubSampleInformationEntry `mp4:"2,len=dynamic"`
+}
+
+// GetType returns the BoxType
+func (*Subs) GetType() BoxType {
+	return BoxTypeSubs()
+}
+
+// GetFieldLength returns length of dynamic field
+func (subs *Subs) GetFieldLength(name string, ctx Context) uint {
+	switch name {
+	case "Entries":
+		return uint(subs.EntryCount)
+	}
+	panic(fmt.Errorf("invalid name of dynamic-length field: boxType=subs fieldName=%s", name))
+}
+
+type SubSampleInformationEntry struct {
+	BaseCustomFieldObject
+	SampleDelta          uint32                 `mp4:"0,size=32"`
+	SubsampleCount       uint16                 `mp4:"1,size=16"`
+	SubsampleInformation []SubSampleInformation `mp4:"2,len=dynamic"`
+	// TODO: Cannot calculate the size of SubsampleInformation because the version of the parent 'subs' box is unavailable.
+}
+
+// GetFieldLength returns length of dynamic field
+func (entry *SubSampleInformationEntry) GetFieldLength(name string, ctx Context) uint {
+	switch name {
+	case "SubsampleInformation":
+		return uint(entry.SubsampleCount)
+	}
+	return 0
+}
+
+type SubSampleInformation struct {
+	SubsampleSizeV0         uint16 `mp4:"0,size=16,nver=1"`
+	SubsampleSizeV1         uint32 `mp4:"1,size=32,ver=1"`
+	SubsamplePriority       uint8  `mp4:"2,size=8"`
+	Discardable             uint8  `mp4:"3,size=8"`
+	CodecSpecificParameters uint32 `mp4:"4,size=32"`
 }
 
 /*************************** tfdt ****************************/
@@ -2530,26 +2652,4 @@ type Wave struct {
 // GetType returns the BoxType
 func (*Wave) GetType() BoxType {
 	return BoxTypeWave()
-}
-
-/*************************** chrm ****************************/
-
-func BoxTypeChrm() BoxType {
-	return StrToBoxType("chrm")
-}
-
-func init() {
-	AddBoxDef((*Chrm)(nil))
-}
-
-// Chrm is AVC chrm box
-type Chrm struct {
-	Box
-	X uint8 `mp4:"0,size=8"`
-	Y uint8 `mp4:"1,size=8"`
-}
-
-// GetType returns the BoxType
-func (*Chrm) GetType() BoxType {
-	return BoxTypeChrm()
 }
