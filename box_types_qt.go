@@ -148,8 +148,8 @@ func init() {
 type Swre struct {
 	FullBox `mp4:"0,extend"`
 	// TODO: Meaning of these two bytes is still unknown.
-	Unknown [2]byte `mp4:"1,size=8"`
-	Version string  `mp4:"2"`
+	Unknown       [2]byte `mp4:"1,size=8"`
+	VersionString string  `mp4:"2,string"`
 }
 
 // GetType returns the BoxType
