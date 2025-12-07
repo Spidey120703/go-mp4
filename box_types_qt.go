@@ -134,6 +134,28 @@ type LoudnessMeasurement struct {
 	Reliability       uint8 `mp4:"3,size=4"`
 }
 
+/*************************** sbtd ****************************/
+
+func BoxTypeSbtd() BoxType {
+	return StrToBoxType("sbtd")
+}
+
+func init() {
+	AddBoxDef(&Sbtd{})
+}
+
+// Sbtd is senc box type
+type Sbtd struct {
+	FullBox `mp4:"0,extend"`
+	// TODO: Meaning of these two bytes is still unknown.
+	Unknown string `mp4:"2,string"`
+}
+
+// GetType returns the BoxType
+func (*Sbtd) GetType() BoxType {
+	return BoxTypeSbtd()
+}
+
 /*************************** swre ****************************/
 
 func BoxTypeSwre() BoxType {
