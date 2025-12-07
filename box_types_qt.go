@@ -2,6 +2,27 @@ package mp4
 
 import "fmt"
 
+/*************************** 4snf ****************************/
+
+func BoxType4snf() BoxType {
+	return StrToBoxType("4snf")
+}
+
+func init() {
+	AddBoxDef((*Snf)(nil))
+}
+
+// Snf is HEVC 4snf box
+type Snf struct {
+	Box
+	Unknown []byte `mp4:"0,size=8"`
+}
+
+// GetType returns the BoxType
+func (*Snf) GetType() BoxType {
+	return BoxType4snf()
+}
+
 /*************************** alac ****************************/
 
 func BoxTypeAlac() BoxType {
