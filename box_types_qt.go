@@ -65,13 +65,13 @@ func BoxTypeC608() BoxType {
 	return StrToBoxType("c608")
 }
 
+func init() {
+	AddAnyTypeBoxDef(&ClosedCaptionSubtitleSampleEntry{}, BoxTypeC608())
+}
+
 type ClosedCaptionSubtitleSampleEntry struct {
 	SampleEntry `mp4:"0,extend"`
 	Unknown     []byte `mp4:"0,size=8"`
-}
-
-func init() {
-	AddAnyTypeBoxDef(&ClosedCaptionSubtitleSampleEntry{}, BoxTypeC608())
 }
 
 /*************************** chrm ****************************/
@@ -213,4 +213,25 @@ type Swre struct {
 // GetType returns the BoxType
 func (*Swre) GetType() BoxType {
 	return BoxTypeSwre()
+}
+
+/*************************** uuid ****************************/
+
+func BoxTypeUUID() BoxType {
+	return StrToBoxType("uuid")
+}
+
+func init() {
+	AddBoxDef(&UUID{})
+}
+
+type UUID struct {
+	Box     `mp4:"0,extend"`
+	UUID    []byte `mp4:"1,size=8,len=16"`
+	Unknown []byte `mp4:"2,size=8"`
+}
+
+// GetType returns the BoxType
+func (*UUID) GetType() BoxType {
+	return BoxTypeUUID()
 }
