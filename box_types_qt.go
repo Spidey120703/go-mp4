@@ -59,6 +59,21 @@ func (*Alac) GetType() BoxType {
 	return BoxTypeAlac()
 }
 
+/*************************** c608 ****************************/
+
+func BoxTypeC608() BoxType {
+	return StrToBoxType("c608")
+}
+
+type ClosedCaptionSubtitleSampleEntry struct {
+	SampleEntry `mp4:"0,extend"`
+	Unknown     []byte `mp4:"0,size=8"`
+}
+
+func init() {
+	AddAnyTypeBoxDef(&ClosedCaptionSubtitleSampleEntry{}, BoxTypeC608())
+}
+
 /*************************** chrm ****************************/
 
 func BoxTypeChrm() BoxType {
