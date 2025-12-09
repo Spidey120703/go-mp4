@@ -59,19 +59,24 @@ func (*Alac) GetType() BoxType {
 	return BoxTypeAlac()
 }
 
-/*************************** c608 ****************************/
+/*************************** c608/c708 ****************************/
+
+// https://developer.apple.com/documentation/quicktime-file-format/closed_captioning_sample_description
 
 func BoxTypeC608() BoxType {
 	return StrToBoxType("c608")
 }
+func BoxTypeC708() BoxType {
+	return StrToBoxType("c708")
+}
 
 func init() {
 	AddAnyTypeBoxDef(&ClosedCaptionSubtitleSampleEntry{}, BoxTypeC608())
+	AddAnyTypeBoxDef(&ClosedCaptionSubtitleSampleEntry{}, BoxTypeC708())
 }
 
 type ClosedCaptionSubtitleSampleEntry struct {
 	SampleEntry `mp4:"0,extend"`
-	Unknown     []byte `mp4:"0,size=8"`
 }
 
 /*************************** chrm ****************************/
