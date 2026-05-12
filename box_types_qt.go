@@ -101,6 +101,26 @@ func (*Chrm) GetType() BoxType {
 	return BoxTypeChrm()
 }
 
+/*************************** dmix ****************************/
+
+func BoxTypeDmix() BoxType { return StrToBoxType("dmix") }
+
+func init() {
+	AddBoxDef(&Dmix{})
+}
+
+// Dmix is an unknown box
+type Dmix struct {
+	FullBox `mp4:"0,extend"`
+	// TODO: Meaning of these bytes is still unknown.
+	Unknown []byte `mp4:"1,size=8,len=6"`
+}
+
+// GetType returns the BoxType
+func (*Dmix) GetType() BoxType {
+	return BoxTypeDmix()
+}
+
 /*************************** ludt ****************************/
 
 func BoxTypeLudt() BoxType {
@@ -218,6 +238,46 @@ type Swre struct {
 // GetType returns the BoxType
 func (*Swre) GetType() BoxType {
 	return BoxTypeSwre()
+}
+
+/*************************** udi2 ****************************/
+
+func BoxTypeUdi2() BoxType { return StrToBoxType("udi2") }
+
+func init() {
+	AddBoxDef(&Udi2{})
+}
+
+// Udi2 is an unknown box
+type Udi2 struct {
+	FullBox `mp4:"0,extend"`
+	// TODO: Meaning of these bytes is still unknown.
+	Unknown []byte `mp4:"1,size=8,len=36"`
+}
+
+// GetType returns the BoxType
+func (*Udi2) GetType() BoxType {
+	return BoxTypeUdi2()
+}
+
+/*************************** udc2 ****************************/
+
+func BoxTypeUdc2() BoxType { return StrToBoxType("udc2") }
+
+func init() {
+	AddBoxDef(&Udc2{})
+}
+
+// Udc2 is an unknown box
+type Udc2 struct {
+	FullBox `mp4:"0,extend"`
+	// TODO: Meaning of these bytes is still unknown.
+	Unknown []byte `mp4:"1,size=8,len=13"`
+}
+
+// GetType returns the BoxType
+func (*Udc2) GetType() BoxType {
+	return BoxTypeUdc2()
 }
 
 /*************************** uuid ****************************/
