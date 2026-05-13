@@ -1,6 +1,7 @@
 package mp4
 
 import (
+	"encoding/binary"
 	"errors"
 	"fmt"
 	"io"
@@ -39,6 +40,20 @@ func ReadBoxStructure(r io.ReadSeeker, handler ReadHandler, params ...interface{
 		return nil, err
 	}
 	return readBoxStructure(r, 0, true, nil, Context{}, handler, params)
+}
+
+// ReadBoxStructureWithContext reads and traverses the MP4 box structure
+// using the provided parsing context.
+//
+// Unlike ReadBoxStructure, this function allows callers to supply an
+// existing Context, which is useful for stateful parsing scenarios such as
+// fragmented MP4, track-aware processing, or encryption-related metadata
+// handling.
+func ReadBoxStructureWithContext(r io.ReadSeeker, ctx Context, handler ReadHandler, params ...interface{}) ([]interface{}, error) {
+	if _, err := r.Seek(0, io.SeekStart); err != nil {
+		return nil, err
+	}
+	return readBoxStructure(r, 0, true, nil, ctx, handler, params)
 }
 
 func ReadBoxStructureFromInternal(r io.ReadSeeker, bi *BoxInfo, handler ReadHandler, params ...interface{}) (interface{}, error) {
@@ -93,6 +108,50 @@ func readBoxStructureFromInternal(r io.ReadSeeker, bi *BoxInfo, path BoxPath, ha
 	} else if ctx.UnderStsd {
 		// handle box type collision between stsd sample entry and its nested boxes
 		ctx.UnderStsd = false
+	}
+
+	if bi.Type == BoxTypeTrak() {
+		// read tkhd box size
+		var tfhdSize uint32
+		_ = binary.Read(r, binary.BigEndian, &tfhdSize)
+		_, _ = r.Seek(4, io.SeekCurrent)
+
+		// read track id from tkhd
+		var tkhd Tkhd
+		if _, err := Unmarshal(r, uint64(tfhdSize), &tkhd, bi.Context); err != nil {
+			return nil, err
+		}
+		ctx.TrackID = tkhd.TrackID
+		if _, err := bi.SeekToPayload(r); err != nil {
+			return nil, err
+		}
+	} else if bi.Type == BoxTypeTraf() {
+		// read tfhd box size
+		var tfhdSize uint32
+		_ = binary.Read(r, binary.BigEndian, &tfhdSize)
+		_, _ = r.Seek(4, io.SeekCurrent)
+
+		// read track id from tfhd
+		var tfhd Tfhd
+		if _, err := Unmarshal(r, uint64(tfhdSize), &tfhd, bi.Context); err != nil {
+			return nil, err
+		}
+		ctx.TrackID = tfhd.TrackID
+		if _, err := bi.SeekToPayload(r); err != nil {
+			return nil, err
+		}
+	} else if bi.Type == BoxTypeTenc() {
+		// register the current track ID with its corresponding tenc box
+		var tenc Tenc
+		if _, err := Unmarshal(r, bi.Size-bi.HeaderSize, &tenc, bi.Context); err != nil {
+			return nil, err
+		}
+		if ctx.Crypto != nil && ctx.Crypto.TencRegistry != nil {
+			ctx.Crypto.TencRegistry[ctx.TrackID] = &tenc
+		}
+		if _, err := bi.SeekToPayload(r); err != nil {
+			return nil, err
+		}
 	}
 
 	newPath := make(BoxPath, len(path)+1)

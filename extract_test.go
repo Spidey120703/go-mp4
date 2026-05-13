@@ -40,14 +40,14 @@ func TestExtractBoxWithPayload(t *testing.T) {
 			path: BoxPath{BoxTypeMoov(), BoxTypeTrak(), BoxTypeMdia(), BoxTypeHdlr()},
 			want: []*BoxInfoWithPayload{
 				{
-					Info: BoxInfo{Offset: 6734, Size: 44, HeaderSize: 8, Type: BoxTypeHdlr()},
+					Info: BoxInfo{Offset: 6734, Size: 44, HeaderSize: 8, Type: BoxTypeHdlr(), Context: Context{TrackID: 1}},
 					Payload: &Hdlr{
 						HandlerType: [4]byte{'v', 'i', 'd', 'e'},
 						Name:        "VideoHandle",
 					},
 				},
 				{
-					Info: BoxInfo{Offset: 7477, Size: 44, HeaderSize: 8, Type: BoxTypeHdlr()},
+					Info: BoxInfo{Offset: 7477, Size: 44, HeaderSize: 8, Type: BoxTypeHdlr(), Context: Context{TrackID: 2}},
 					Payload: &Hdlr{
 						HandlerType: [4]byte{'s', 'o', 'u', 'n'},
 						Name:        "SoundHandle",
@@ -60,7 +60,7 @@ func TestExtractBoxWithPayload(t *testing.T) {
 			path: BoxPath{BoxTypeMoov(), BoxTypeTrak(), BoxTypeMdia(), BoxTypeAny()},
 			want: []*BoxInfoWithPayload{
 				{
-					Info: BoxInfo{Offset: 6702, Size: 32, HeaderSize: 8, Type: BoxTypeMdhd()},
+					Info: BoxInfo{Offset: 6702, Size: 32, HeaderSize: 8, Type: BoxTypeMdhd(), Context: Context{TrackID: 1}},
 					Payload: &Mdhd{
 						Timescale:  10240,
 						DurationV0: 10240,
@@ -68,18 +68,18 @@ func TestExtractBoxWithPayload(t *testing.T) {
 					},
 				},
 				{
-					Info: BoxInfo{Offset: 6734, Size: 44, HeaderSize: 8, Type: BoxTypeHdlr()},
+					Info: BoxInfo{Offset: 6734, Size: 44, HeaderSize: 8, Type: BoxTypeHdlr(), Context: Context{TrackID: 1}},
 					Payload: &Hdlr{
 						HandlerType: [4]byte{'v', 'i', 'd', 'e'},
 						Name:        "VideoHandle",
 					},
 				},
 				{
-					Info:    BoxInfo{Offset: 6778, Size: 523, HeaderSize: 8, Type: BoxTypeMinf()},
+					Info:    BoxInfo{Offset: 6778, Size: 523, HeaderSize: 8, Type: BoxTypeMinf(), Context: Context{TrackID: 1}},
 					Payload: &Minf{},
 				},
 				{
-					Info: BoxInfo{Offset: 7445, Size: 32, HeaderSize: 8, Type: BoxTypeMdhd()},
+					Info: BoxInfo{Offset: 7445, Size: 32, HeaderSize: 8, Type: BoxTypeMdhd(), Context: Context{TrackID: 2}},
 					Payload: &Mdhd{
 						Timescale:  44100,
 						DurationV0: 45124,
@@ -87,14 +87,14 @@ func TestExtractBoxWithPayload(t *testing.T) {
 					},
 				},
 				{
-					Info: BoxInfo{Offset: 7477, Size: 44, HeaderSize: 8, Type: BoxTypeHdlr()},
+					Info: BoxInfo{Offset: 7477, Size: 44, HeaderSize: 8, Type: BoxTypeHdlr(), Context: Context{TrackID: 2}},
 					Payload: &Hdlr{
 						HandlerType: [4]byte{'s', 'o', 'u', 'n'},
 						Name:        "SoundHandle",
 					},
 				},
 				{
-					Info:    BoxInfo{Offset: 7521, Size: 624, HeaderSize: 8, Type: BoxTypeMinf()},
+					Info:    BoxInfo{Offset: 7521, Size: 624, HeaderSize: 8, Type: BoxTypeMinf(), Context: Context{TrackID: 2}},
 					Payload: &Minf{},
 				},
 			},
@@ -146,20 +146,20 @@ func TestExtractBox(t *testing.T) {
 			name: "multi hit",
 			path: BoxPath{BoxTypeMoov(), BoxTypeTrak(), BoxTypeTkhd()},
 			want: []*BoxInfo{
-				{Offset: 6566, Size: 92, HeaderSize: 8, Type: BoxTypeTkhd()},
-				{Offset: 7309, Size: 92, HeaderSize: 8, Type: BoxTypeTkhd()},
+				{Offset: 6566, Size: 92, HeaderSize: 8, Type: BoxTypeTkhd(), Context: Context{TrackID: 1}},
+				{Offset: 7309, Size: 92, HeaderSize: 8, Type: BoxTypeTkhd(), Context: Context{TrackID: 2}},
 			},
 		},
 		{
 			name: "any type",
 			path: BoxPath{BoxTypeMoov(), BoxTypeTrak(), BoxTypeAny()},
 			want: []*BoxInfo{
-				{Offset: 6566, Size: 92, HeaderSize: 8, Type: BoxTypeTkhd()},
-				{Offset: 6658, Size: 36, HeaderSize: 8, Type: BoxTypeEdts()},
-				{Offset: 6694, Size: 607, HeaderSize: 8, Type: BoxTypeMdia()},
-				{Offset: 7309, Size: 92, HeaderSize: 8, Type: BoxTypeTkhd()},
-				{Offset: 7401, Size: 36, HeaderSize: 8, Type: BoxTypeEdts()},
-				{Offset: 7437, Size: 708, HeaderSize: 8, Type: BoxTypeMdia()},
+				{Offset: 6566, Size: 92, HeaderSize: 8, Type: BoxTypeTkhd(), Context: Context{TrackID: 1}},
+				{Offset: 6658, Size: 36, HeaderSize: 8, Type: BoxTypeEdts(), Context: Context{TrackID: 1}},
+				{Offset: 6694, Size: 607, HeaderSize: 8, Type: BoxTypeMdia(), Context: Context{TrackID: 1}},
+				{Offset: 7309, Size: 92, HeaderSize: 8, Type: BoxTypeTkhd(), Context: Context{TrackID: 2}},
+				{Offset: 7401, Size: 36, HeaderSize: 8, Type: BoxTypeEdts(), Context: Context{TrackID: 2}},
+				{Offset: 7437, Size: 708, HeaderSize: 8, Type: BoxTypeMdia(), Context: Context{TrackID: 2}},
 			},
 		},
 	}
@@ -226,8 +226,8 @@ func TestExtractBoxes(t *testing.T) {
 				{BoxTypeMoov(), BoxTypeTrak(), BoxTypeTkhd()},
 			},
 			want: []*BoxInfo{
-				{Offset: 6566, Size: 92, HeaderSize: 8, Type: BoxTypeTkhd()},
-				{Offset: 7309, Size: 92, HeaderSize: 8, Type: BoxTypeTkhd()},
+				{Offset: 6566, Size: 92, HeaderSize: 8, Type: BoxTypeTkhd(), Context: Context{TrackID: 1}},
+				{Offset: 7309, Size: 92, HeaderSize: 8, Type: BoxTypeTkhd(), Context: Context{TrackID: 2}},
 			},
 		},
 	}

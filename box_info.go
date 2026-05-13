@@ -32,6 +32,21 @@ type Context struct {
 
 	// UnderStsd represents whether current box is under the stsd box.
 	UnderStsd bool
+
+	// TrackID represents which track the current sub-box belongs to.
+	TrackID uint32
+
+	// Crypto provides track encryption lookup context.
+	Crypto *CryptoContext
+}
+
+// CryptoContext stores shared encryption/decryption metadata
+// required during media parsing and processing.
+type CryptoContext struct {
+
+	// TencRegistry maps track IDs to their corresponding tenc boxes,
+	// providing track-level default encryption information.
+	TencRegistry map[uint32]*Tenc
 }
 
 // BoxInfo has common infomations of box
