@@ -14,8 +14,8 @@ func checkPayloadSize(r io.ReadSeeker, bi *BoxInfo) error {
 	if err != nil {
 		return nil
 	}
-	if bi.Size-bi.HeaderSize > uint64(fileSize) {
-		return fmt.Errorf("box payload size exceeds file size: payloadSize=%d, fileSize=%d", bi.Size-bi.HeaderSize, fileSize)
+	if bi.Offset+bi.Size > uint64(fileSize) {
+		return fmt.Errorf("box size exceeds file size: offset=%d, size=%d, fileSize=%d", bi.Offset, bi.Size, fileSize)
 	}
 	return nil
 }
