@@ -12,7 +12,7 @@ func init() {
 	AddBoxDef((*Snf)(nil))
 }
 
-// Snf is HEVC 4snf box
+// Snf is HEVC 4snf box type
 type Snf struct {
 	Box
 	Unknown []byte `mp4:"0,size=8"`
@@ -89,7 +89,7 @@ func init() {
 	AddBoxDef((*Chrm)(nil))
 }
 
-// Chrm is AVC chrm box
+// Chrm is AVC chrm box type
 type Chrm struct {
 	Box
 	X uint8 `mp4:"0,size=8"`
@@ -109,7 +109,7 @@ func init() {
 	AddBoxDef(&Dmix{})
 }
 
-// Dmix is an unknown box
+// Dmix is dmix box type
 type Dmix struct {
 	FullBox `mp4:"0,extend"`
 	// TODO: Meaning of these bytes is still unknown.
@@ -205,7 +205,7 @@ func init() {
 	AddBoxDef(&Sbtd{})
 }
 
-// Sbtd is senc box type
+// Sbtd is sbtd box type
 type Sbtd struct {
 	FullBox `mp4:"0,extend"`
 	// TODO: Meaning of these two bytes is still unknown.
@@ -227,7 +227,7 @@ func init() {
 	AddBoxDef(&Swre{})
 }
 
-// Swre is thef name and version number of the software that generated this movie
+// Swre is the name and version number of the software that generated this movie
 type Swre struct {
 	FullBox `mp4:"0,extend"`
 	// TODO: Meaning of these two bytes is still unknown.
@@ -248,7 +248,7 @@ func init() {
 	AddBoxDef(&Udi2{})
 }
 
-// Udi2 is an unknown box
+// Udi2 is udi2 box type
 type Udi2 struct {
 	FullBox `mp4:"0,extend"`
 	// TODO: Meaning of these bytes is still unknown.
@@ -268,7 +268,7 @@ func init() {
 	AddBoxDef(&Udc2{})
 }
 
-// Udc2 is an unknown box
+// Udc2 is udc2 box type
 type Udc2 struct {
 	FullBox `mp4:"0,extend"`
 	// TODO: Meaning of these bytes is still unknown.
@@ -291,8 +291,9 @@ func init() {
 }
 
 type UUID struct {
-	Box     `mp4:"0,extend"`
-	UUID    []byte `mp4:"1,size=8,len=16"`
+	Box  `mp4:"0,extend"`
+	UUID []byte `mp4:"1,size=8,len=16"`
+	// TODO: Meaning of these bytes is still unknown.
 	Unknown []byte `mp4:"2,size=8"`
 }
 
