@@ -49,6 +49,12 @@ type CryptoContext struct {
 	TencRegistry map[uint32]*Tenc
 }
 
+func NewCryptoContext() *CryptoContext {
+	return &CryptoContext{
+		TencRegistry: make(map[uint32]*Tenc),
+	}
+}
+
 // BoxInfo has common infomations of box
 type BoxInfo struct {
 	// Offset specifies an offset of the box in a file.
