@@ -19,227 +19,50 @@ func TestBoxTypesQuickTime(t *testing.T) {
 		ctx  Context
 	}{
 		{
-			name: "ludt",
-			src:  &Ludt{},
-			dst:  &Ludt{},
-			bin:  nil,
-			str:  ``,
-		},
-		{
-			name: "tlou",
-			src: &LoudnessEntry{
-				AnyTypeBox:        AnyTypeBox{Type: BoxTypeTlou()},
-				Version:           1,
-				Flags:             [3]byte{},
-				LoudnessBaseCount: 1,
-				LoudnessBases: []LoudnessBase{
-					{
-						EQSetID:                0,
-						DownmixID:              0,
-						DRCSetID:               0,
-						BsSamplePeakLevel:      647,
-						BsTruePeakLevel:        644,
-						MeasurementSystemForTP: 2,
-						ReliabilityForTP:       3,
-						MeasurementCount:       5,
-						Measurements: []LoudnessMeasurement{{
-							MethodDefinition:  1,
-							MethodValue:       184,
-							MeasurementSystem: 2,
-							Reliability:       3,
-						},
-							{
-								MethodDefinition:  3,
-								MethodValue:       194,
-								MeasurementSystem: 1,
-								Reliability:       3,
-							},
-							{
-								MethodDefinition:  4,
-								MethodValue:       200,
-								MeasurementSystem: 1,
-								Reliability:       3,
-							},
-							{
-								MethodDefinition:  5,
-								MethodValue:       196,
-								MeasurementSystem: 1,
-								Reliability:       3,
-							},
-							{
-								MethodDefinition:  6,
-								MethodValue:       54,
-								MeasurementSystem: 0,
-								Reliability:       0,
-							},
-						},
-					},
-				},
+			name: "alac",
+			src: &Alac{
+				FrameLength:       4096,
+				CompatibleVersion: 0,
+				BitDepth:          16,
+				Pb:                40,
+				Mb:                10,
+				Kb:                14,
+				NumChannels:       2,
+				MaxRun:            255,
+				MaxFrameBytes:     16388,
+				AvgBitRate:        1411200,
+				SampleRate:        44100,
 			},
-			dst: &LoudnessEntry{
-				AnyTypeBox:        AnyTypeBox{Type: BoxTypeTlou()},
-				LoudnessBaseCount: 1,
-				LoudnessBases: []LoudnessBase{
-					{
-						EQSetID:                0,
-						DownmixID:              0,
-						DRCSetID:               0,
-						BsSamplePeakLevel:      647,
-						BsTruePeakLevel:        644,
-						MeasurementSystemForTP: 2,
-						ReliabilityForTP:       3,
-						MeasurementCount:       5,
-						Measurements: []LoudnessMeasurement{{
-							MethodDefinition:  1,
-							MethodValue:       184,
-							MeasurementSystem: 2,
-							Reliability:       3,
-						},
-							{
-								MethodDefinition:  3,
-								MethodValue:       194,
-								MeasurementSystem: 1,
-								Reliability:       3,
-							},
-							{
-								MethodDefinition:  4,
-								MethodValue:       200,
-								MeasurementSystem: 1,
-								Reliability:       3,
-							},
-							{
-								MethodDefinition:  5,
-								MethodValue:       196,
-								MeasurementSystem: 1,
-								Reliability:       3,
-							},
-							{
-								MethodDefinition:  6,
-								MethodValue:       54,
-								MeasurementSystem: 0,
-								Reliability:       0,
-							},
-						},
-					},
-				},
+			dst: &Alac{
+				FrameLength:       4096,
+				CompatibleVersion: 0,
+				BitDepth:          16,
+				Pb:                40,
+				Mb:                10,
+				Kb:                14,
+				NumChannels:       2,
+				MaxRun:            255,
+				MaxFrameBytes:     16388,
+				AvgBitRate:        1411200,
+				SampleRate:        44100,
 			},
 			bin: []byte{
-				0x01,             // version
+				0x00,             // version
 				0x00, 0x00, 0x00, // flags
-				0x01, 0x00, 0x00, 0x00, 0x28, 0x72, 0x84, 0x23, 0x05, 0x01, 0xB8, 0x23,
-				0x03, 0xC2, 0x13, 0x04, 0xC8, 0x13, 0x05, 0xC4, 0x13, 0x06, 0x36, 0x00,
+				0x00, 0x00, 0x10, 0x00, // frame length
+				0x00,       // compatible version
+				0x10,       // bit depth
+				0x28,       // pb
+				0x0A,       // mb
+				0x0E,       // kb
+				0x02,       // num channels
+				0x00, 0xFF, // max run
+				0x00, 0x00, 0x40, 0x04, // max frame bytes
+				0x00, 0x15, 0x88, 0x80, // average bit rate
+				0x00, 0x00, 0xAC, 0x44, // sample rate
 			},
-			str: `Version=0 Flags=0x000000 LoudnessBases=[{EQSetID=0x0 DownmixID=0x0 DRCSetID=0x0 BsSamplePeakLevel=647 BsTruePeakLevel=644 MeasurementSystemForTP=0x2 ReliabilityForTP=0x3 MeasurementCount=0x5 Measurements=[{MethodDefinition=0x1 MethodValue=0xb8 MeasurementSystem=0x2 Reliability=0x3}, {MethodDefinition=0x3 MethodValue=0xc2 MeasurementSystem=0x1 Reliability=0x3}, {MethodDefinition=0x4 MethodValue=0xc8 MeasurementSystem=0x1 Reliability=0x3}, {MethodDefinition=0x5 MethodValue=0xc4 MeasurementSystem=0x1 Reliability=0x3}, {MethodDefinition=0x6 MethodValue=0x36 MeasurementSystem=0x0 Reliability=0x0}]}]`,
-		},
-		{
-			name: "alou",
-			src: &LoudnessEntry{
-				AnyTypeBox:        AnyTypeBox{Type: BoxTypeAlou()},
-				Version:           1,
-				Flags:             [3]byte{},
-				LoudnessBaseCount: 1,
-				LoudnessBases: []LoudnessBase{
-					{
-						EQSetID:                0,
-						DownmixID:              0,
-						DRCSetID:               0,
-						BsSamplePeakLevel:      643,
-						BsTruePeakLevel:        588,
-						MeasurementSystemForTP: 2,
-						ReliabilityForTP:       3,
-						MeasurementCount:       5,
-						Measurements: []LoudnessMeasurement{
-							{
-								MethodDefinition:  1,
-								MethodValue:       200,
-								MeasurementSystem: 2,
-								Reliability:       3,
-							},
-							{
-								MethodDefinition:  3,
-								MethodValue:       206,
-								MeasurementSystem: 1,
-								Reliability:       3,
-							},
-							{
-								MethodDefinition:  4,
-								MethodValue:       216,
-								MeasurementSystem: 1,
-								Reliability:       3,
-							},
-							{
-								MethodDefinition:  5,
-								MethodValue:       208,
-								MeasurementSystem: 1,
-								Reliability:       3,
-							},
-							{
-								MethodDefinition:  6,
-								MethodValue:       54,
-								MeasurementSystem: 0,
-								Reliability:       0,
-							},
-						},
-					},
-				},
-			},
-			dst: &LoudnessEntry{
-				AnyTypeBox:        AnyTypeBox{Type: BoxTypeAlou()},
-				Version:           1,
-				Flags:             [3]byte{},
-				LoudnessBaseCount: 1,
-				LoudnessBases: []LoudnessBase{
-					{
-						EQSetID:                0,
-						DownmixID:              0,
-						DRCSetID:               0,
-						BsSamplePeakLevel:      643,
-						BsTruePeakLevel:        588,
-						MeasurementSystemForTP: 2,
-						ReliabilityForTP:       3,
-						MeasurementCount:       5,
-						Measurements: []LoudnessMeasurement{
-							{
-								MethodDefinition:  1,
-								MethodValue:       200,
-								MeasurementSystem: 2,
-								Reliability:       3,
-							},
-							{
-								MethodDefinition:  3,
-								MethodValue:       206,
-								MeasurementSystem: 1,
-								Reliability:       3,
-							},
-							{
-								MethodDefinition:  4,
-								MethodValue:       216,
-								MeasurementSystem: 1,
-								Reliability:       3,
-							},
-							{
-								MethodDefinition:  5,
-								MethodValue:       208,
-								MeasurementSystem: 1,
-								Reliability:       3,
-							},
-							{
-								MethodDefinition:  6,
-								MethodValue:       54,
-								MeasurementSystem: 0,
-								Reliability:       0,
-							},
-						},
-					},
-				},
-			},
-			bin: []byte{
-				0x01,             // version
-				0x00, 0x00, 0x00, // flags
-				0x01, 0x00, 0x00, 0x00, 0x28, 0x32, 0x4C, 0x23, 0x05, 0x01, 0xC8, 0x23,
-				0x03, 0xCE, 0x13, 0x04, 0xD8, 0x13, 0x05, 0xD0, 0x13, 0x06, 0x36, 0x00,
-			},
-			str: `Version=0 Flags=0x000000 LoudnessBases=[{EQSetID=0x0 DownmixID=0x0 DRCSetID=0x0 BsSamplePeakLevel=643 BsTruePeakLevel=588 MeasurementSystemForTP=0x2 ReliabilityForTP=0x3 MeasurementCount=0x5 Measurements=[{MethodDefinition=0x1 MethodValue=0xc8 MeasurementSystem=0x2 Reliability=0x3}, {MethodDefinition=0x3 MethodValue=0xce MeasurementSystem=0x1 Reliability=0x3}, {MethodDefinition=0x4 MethodValue=0xd8 MeasurementSystem=0x1 Reliability=0x3}, {MethodDefinition=0x5 MethodValue=0xd0 MeasurementSystem=0x1 Reliability=0x3}, {MethodDefinition=0x6 MethodValue=0x36 MeasurementSystem=0x0 Reliability=0x0}]}]`,
+			str: "Version=0 Flags=0x000000 FrameLength=4096 CompatibleVersion=0x0 BitDepth=0x10 Pb=0x28 Mb=0xa Kb=0xe NumChannels=0x2 MaxRun=255 MaxFrameBytes=16388 AvgBitRate=1411200 SampleRate=44100",
+			ctx: Context{},
 		},
 	}
 	for _, tc := range testCases {

@@ -771,6 +771,101 @@ func (hvcc HvcC) GetFieldLength(name string, ctx Context) uint {
 	return 0
 }
 
+/*************************** ludt ****************************/
+
+func BoxTypeLudt() BoxType {
+	return StrToBoxType("ludt")
+}
+func BoxTypeTlou() BoxType {
+	return StrToBoxType("tlou")
+}
+func BoxTypeAlou() BoxType {
+	return StrToBoxType("alou")
+}
+
+func init() {
+	AddBoxDef(&Ludt{})
+	AddAnyTypeBoxDef(&LoudnessBaseBox{}, BoxTypeTlou())
+	AddAnyTypeBoxDef(&LoudnessBaseBox{}, BoxTypeAlou())
+}
+
+// Ludt is ISOBMFF ludt box type
+type Ludt struct {
+	Box
+}
+
+// GetType returns the BoxType
+func (*Ludt) GetType() BoxType {
+	return BoxTypeLudt()
+}
+
+type LoudnessBaseBox struct {
+	AnyTypeBox
+	FullBox             `mp4:"0,extend"`
+	LoudnessInfoType    uint8          `mp4:"1,size=2,nver=0"`
+	LoudnessBaseCountV0 uint8          `mp4:"2,size=8,ver=0,const=1"`
+	LoudnessBaseCountV1 uint8          `mp4:"2,size=6,nver=0"`
+	Reserved0           uint8          `mp4:"3,size=1,opt=dynamic,const=0"`
+	MaeGroupID          uint8          `mp4:"4,size=7,opt=dynamic"`
+	Reserved1           uint8          `mp4:"3,size=3,opt=dynamic,const=0"`
+	MaeGroupPresetID    uint8          `mp4:"4,size=5,opt=dynamic"`
+	LoudnessBases       []LoudnessBase `mp4:"4,len=dynamic"`
+}
+
+// GetFieldLength returns length of dynamic field
+func (lou *LoudnessBaseBox) GetFieldLength(name string, ctx Context) uint {
+	switch name {
+	case "LoudnessBases":
+		return uint(lou.LoudnessBaseCountV1)
+	}
+	panic(fmt.Errorf("invalid name of dynamic-length field: boxType=%s fieldName=%s", lou.Type.String(), name))
+}
+
+// IsOptFieldEnabled check whether if the optional field is enabled
+func (lou *LoudnessBaseBox) IsOptFieldEnabled(name string, ctx Context) bool {
+	switch name {
+	case "Reserved0":
+		return lou.Version >= 2 && (lou.LoudnessInfoType == 1 || lou.LoudnessInfoType == 2)
+	case "MaeGroupID":
+		return lou.Version >= 2 && (lou.LoudnessInfoType == 1 || lou.LoudnessInfoType == 2)
+	case "Reserved1":
+		return lou.Version >= 2 && lou.LoudnessInfoType == 3
+	case "MaeGroupPresetID":
+		return lou.Version >= 2 && lou.LoudnessInfoType == 3
+	}
+	return true
+}
+
+type LoudnessBase struct {
+	BaseCustomFieldObject
+	Reserved               uint8                 `mp4:"0,size=2,nver=0,const=0"`
+	EQSetID                uint8                 `mp4:"1,size=6,nver=0"`
+	DownmixID              uint8                 `mp4:"2,size=10"`
+	DRCSetID               uint8                 `mp4:"3,size=6"`
+	BsSamplePeakLevel      uint16                `mp4:"4,size=12"`
+	BsTruePeakLevel        uint16                `mp4:"5,size=12"`
+	MeasurementSystemForTP uint8                 `mp4:"6,size=4"`
+	ReliabilityForTP       uint8                 `mp4:"7,size=4"`
+	MeasurementCount       uint8                 `mp4:"8,size=8"`
+	Measurements           []LoudnessMeasurement `mp4:"9,size=24,len=dynamic"`
+}
+
+// GetFieldLength returns length of dynamic field
+func (lou *LoudnessBase) GetFieldLength(name string, ctx Context) uint {
+	switch name {
+	case "Measurements":
+		return uint(lou.MeasurementCount)
+	}
+	panic(fmt.Errorf("invalid name of dynamic-length field: boxType=loud_base fieldName=%s", name))
+}
+
+type LoudnessMeasurement struct {
+	MethodDefinition  uint8 `mp4:"0,size=8"`
+	MethodValue       uint8 `mp4:"1,size=8"`
+	MeasurementSystem uint8 `mp4:"2,size=4"`
+	Reliability       uint8 `mp4:"3,size=4"`
+}
+
 /*************************** mdat ****************************/
 
 func BoxTypeMdat() BoxType { return StrToBoxType("mdat") }
