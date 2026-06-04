@@ -176,7 +176,7 @@ func init() {
 type Udi2 struct {
 	FullBox `mp4:"0,extend"`
 	// TODO: Meaning of these bytes is still unknown.
-	Unknown []byte `mp4:"1,size=8,len=36"`
+	Unknown []byte `mp4:"1,size=8"`
 }
 
 // GetType returns the BoxType
@@ -196,7 +196,7 @@ func init() {
 type Udc2 struct {
 	FullBox `mp4:"0,extend"`
 	// TODO: Meaning of these bytes is still unknown.
-	Unknown []byte `mp4:"1,size=8,len=13"`
+	Unknown []byte `mp4:"1,size=8"`
 }
 
 // GetType returns the BoxType
