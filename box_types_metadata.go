@@ -6,24 +6,6 @@ import (
 	"github.com/Spidey120703/go-mp4/internal/util"
 )
 
-/*************************** hdlr ****************************/
-
-func init() {
-	AddBoxDefEx(&MetadataHandlerBox{}, isUnderUdta)
-}
-
-type MetadataHandlerBox struct {
-	FullBox       `mp4:"0,extend"`
-	ComponentType uint32 `mp4:"1,size=32"`
-	HandlerType   []byte `mp4:"2,size=8,len=4,string"`
-	Name          []byte `mp4:"3,size=8,string"`
-}
-
-// GetType returns the BoxType
-func (*MetadataHandlerBox) GetType() BoxType {
-	return BoxTypeHdlr()
-}
-
 /*************************** ilst ****************************/
 
 func BoxTypeIlst() BoxType { return StrToBoxType("ilst") }
